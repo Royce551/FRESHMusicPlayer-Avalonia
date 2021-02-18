@@ -36,4 +36,11 @@ jobs:
         release_name: Continuous Build
         replace_old_tag: true
         prerelease: true
-
+    - uses: actions/upload-release-asset@v1.01
+      name: "Upload Release"
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        upload_url: ${{steps.create_release.outputs.upload_url}}
+        asset_path: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Release/net5.0
+        asset_name: fmp-avalonia
