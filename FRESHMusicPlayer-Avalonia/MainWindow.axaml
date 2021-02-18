@@ -5,7 +5,10 @@
     </Window.Styles>
     <DockPanel LastChildFill="False">
         <TabControl DockPanel.Dock="Top">
-            <TabItem Header="Tracks" />
+            <TabItem Header="Tracks">
+				<ListBox x:Name="Tracks_TracksListBox"/>
+				</TabItem>
+			
             <TabItem Header="Artists" />
             <TabItem Header="Albums" />
             <TabItem Header="Playlists" />

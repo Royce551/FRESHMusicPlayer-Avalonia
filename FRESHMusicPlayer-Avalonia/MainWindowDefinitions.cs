@@ -2,6 +2,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
+using FRESHMusicPlayer.Handlers;
+using LiteDB;
+using System.IO;
 
 namespace FRESHMusicPlayer_Avalonia
 {
@@ -23,6 +26,8 @@ namespace FRESHMusicPlayer_Avalonia
         private Button PlayPauseButton;
         private ToggleButton RepeatOneButton;
         private Button NextTrackButton;
+
+        private ListBox Tracks_TracksListBox;
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +58,11 @@ namespace FRESHMusicPlayer_Avalonia
             RepeatOneButton = this.Find<ToggleButton>("RepeatOneButton");
             NextTrackButton = this.Find<Button>("NextTrackButton");
 
+            Tracks_TracksListBox = this.Find<ListBox>("Tracks_TracksListBox");
+
+            try { Libraryv2 = new LiteDatabase(Path.Combine(DatabaseHandler.DatabasePath, "database.fdb2")); }
+            catch { TrackTitleTextBlock.Text = "Library is not available; another instance of FMP is probably open"; }
+
             Player.SongChanged += Player_SongChanged;
             Player.SongStopped += Player_SongStopped;
             Player.SongException += Player_SongException;
@@ -64,6 +74,7 @@ namespace FRESHMusicPlayer_Avalonia
             NextTrackButton.Click += NextTrackButton_Click;
 
             progressTimer.Elapsed += ProgressTimer_Elapsed;
+            LoadLibrary();
         }
 
         

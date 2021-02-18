@@ -6,14 +6,21 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using FRESHMusicPlayer;
+using FRESHMusicPlayer_Avalonia.Utils;
+using LiteDB;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Timers;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FRESHMusicPlayer_Avalonia
 {
     public partial class MainWindow : Window
     {
+        public static LiteDatabase Libraryv2;
+
         public Player Player = new Player();
         public ATL.Track? CurrentTrack;
 
@@ -22,6 +29,22 @@ namespace FRESHMusicPlayer_Avalonia
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public async void LoadLibrary()
+        {
+            var trackEntries = new List<string>();
+            await Task.Run(() =>
+            {
+                var tracks = DatabaseUtils.Read();
+                
+                foreach (var track in tracks)
+                {
+                    trackEntries.Add($"{track.Artist} - {track.Title}");
+                }
+                
+            });
+            Tracks_TracksListBox.Items = trackEntries;
         }
 
         private void Player_SongException(object? sender, FRESHMusicPlayer.Handlers.PlaybackExceptionEventArgs e)
