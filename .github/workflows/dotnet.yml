@@ -25,7 +25,7 @@ jobs:
       name: Upload Artifact to GitHub Actions
       with:
         name: fmp-avalonia
-        path: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Debug/net5.0
+        path: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Release/net5.0
     - uses: vicr123/create-release@delete-old-release
       name: Create Release
       id: create_release
