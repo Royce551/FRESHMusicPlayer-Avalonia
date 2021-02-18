@@ -20,5 +20,20 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --configuration Release --no-restore
+    - uses: actions/upload-artifact@v2
+      name: Upload Artifact to GitHub Actions
+      with:
+        name: fmp-avalonia
+        path: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Debug/net5.0
+    - uses: vicr123/create-release@delete-old-release
+      name: Create Release
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        tag_name: continuous
+        release_name: Continuous Build
+        replace_old_tag: true
+        prerelease: true
 
