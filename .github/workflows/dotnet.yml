@@ -26,7 +26,7 @@ jobs:
     - uses: thedoctor0/zip-release@master
       name: Archive Release
       with:
-        directory: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Release
+        directory: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Release/
         filename: release.zip
       
     - uses: actions/upload-artifact@v2
