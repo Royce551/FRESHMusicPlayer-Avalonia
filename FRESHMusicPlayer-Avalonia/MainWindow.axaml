@@ -44,13 +44,22 @@
                 </Grid>
             </Grid>
 			<!--Right Section-->
-            <WrapPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,0">
-                <Button x:Name="PreviousTrackButton" Content="Previous" />
-                <ToggleButton x:Name="ShuffleButton" Content="Shuffle" />
-                <Button x:Name="PlayPauseButton" Content="Pause" />
-                <ToggleButton x:Name="RepeatOneButton" Content="Repeat One" />
-                <Button x:Name="NextTrackButton" Content="Next" />
-            </WrapPanel>
+			<Grid Grid.Column="3">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<TextBlock Grid.Row="0" Text="Volume" Margin="10,0,50,0"/>
+                <Slider x:Name="VolumeSlider" Grid.Row="1" Maximum="1" Margin="10, -10"/>
+				<WrapPanel Grid.Row="2" VerticalAlignment="Center" Margin="10,0">
+					<Button x:Name="PreviousTrackButton" Content="Previous" />
+					<ToggleButton x:Name="ShuffleButton" Content="Shuffle" />
+					<Button x:Name="PlayPauseButton" Content="Pause" />
+					<ToggleButton x:Name="RepeatOneButton" Content="Repeat One" />
+					<Button x:Name="NextTrackButton" Content="Next" />
+				</WrapPanel>
+			</Grid>   
         </Grid>
     </DockPanel>
 </Window>

@@ -15,6 +15,7 @@ namespace FRESHMusicPlayer_Avalonia
         private TextBlock ProgressIndicator1;
         private TextBlock ProgressIndicator2;
         private Slider ProgressSlider;
+        private Slider VolumeSlider;
         private Image CoverArtImage;
 
         private Button PreviousTrackButton;
@@ -37,6 +38,13 @@ namespace FRESHMusicPlayer_Avalonia
             ProgressIndicator1 = this.Find<TextBlock>("ProgressIndicator1");
             ProgressIndicator2 = this.Find<TextBlock>("ProgressIndicator2");
             ProgressSlider = this.Find<Slider>("ProgressSlider");
+            ProgressSlider.AddHandler(Slider.PointerPressedEvent, ProgressSlider_PointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+            //ProgressSlider.PointerPressed += ProgressSlider_PointerPressed;
+            //ProgressSlider.PointerReleased += ProgressSlider_PointerReleased;
+            ProgressSlider.AddHandler(Slider.PointerReleasedEvent, ProgressSlider_PointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+            ProgressSlider.PropertyChanged += ProgressSlider_PropertyChanged;
+            VolumeSlider = this.Find<Slider>("VolumeSlider");
+            VolumeSlider.PropertyChanged += VolumeSlider_PropertyChanged;
             CoverArtImage = this.Find<Image>("CoverArtImage");
 
             PreviousTrackButton = this.Find<Button>("PreviousTrackButton");
@@ -58,6 +66,6 @@ namespace FRESHMusicPlayer_Avalonia
             progressTimer.Elapsed += ProgressTimer_Elapsed;
         }
 
-
+        
     }
 }

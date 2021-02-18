@@ -1,6 +1,7 @@
 using ATL;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -14,7 +15,7 @@ namespace FRESHMusicPlayer_Avalonia
     public partial class MainWindow : Window
     {
         public Player Player = new Player();
-        public Track? CurrentTrack;
+        public ATL.Track? CurrentTrack;
 
         private Timer progressTimer = new Timer(1000);
 
@@ -40,7 +41,7 @@ namespace FRESHMusicPlayer_Avalonia
 
         private void Player_SongChanged(object? sender, System.EventArgs e)
         {
-            CurrentTrack = new Track(Player.FilePath);
+            CurrentTrack = new ATL.Track(Player.FilePath);
             Title = $"{CurrentTrack.Artist} - {CurrentTrack.Title} | FRESHMusicPlayer";
             TrackTitleTextBlock.Text = string.IsNullOrWhiteSpace(CurrentTrack.Title) ? "Unknown Title" : CurrentTrack.Title;
             TrackArtistTextBlock.Text = string.IsNullOrWhiteSpace(CurrentTrack.Artist) ? "Unknown Artist" : CurrentTrack.Artist;
@@ -49,15 +50,7 @@ namespace FRESHMusicPlayer_Avalonia
             ProgressSlider.Maximum = Player.CurrentBackend.TotalTime.TotalSeconds;
             progressTimer.Start();
         }
-        private void ProgressTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            var time = TimeSpan.FromSeconds(Math.Floor(Player.CurrentBackend.CurrentTime.TotalSeconds));
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                ProgressIndicator1.Text = time.ToString(@"mm\:ss");
-                ProgressSlider.Value = time.TotalSeconds;
-            });
-        }
+        private void ProgressTimer_Elapsed(object sender, ElapsedEventArgs e) => ProgressTick();
         public void PlayPauseMethod()
         {
             if (!Player.Playing) return;
@@ -71,6 +64,15 @@ namespace FRESHMusicPlayer_Avalonia
                 Player.PauseMusic();
                 progressTimer.Stop();
             }
+        }
+        public void ProgressTick()
+        {
+            var time = TimeSpan.FromSeconds(Math.Floor(Player.CurrentBackend.CurrentTime.TotalSeconds));
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                ProgressIndicator1.Text = time.ToString(@"mm\:ss");
+                ProgressSlider.Value = time.TotalSeconds;
+            });
         }
         public void StopMethod() => Player.StopMusic();
         public void NextTrackMethod() => Player.NextSong();
@@ -89,6 +91,46 @@ namespace FRESHMusicPlayer_Avalonia
         private void ShuffleButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => Player.Shuffle = ShuffleButton.IsPressed;
 
         private void PreviousTrackButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => PreviousTrackMethod();
+
+        private bool progressSliderIsBeingDragged;
+        private void ProgressSlider_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property == RangeBase.ValueProperty)
+            {
+                if (e.NewValue is double d)
+                {
+                    if (Player.Playing && progressSliderIsBeingDragged)
+                    {
+                        Player.RepositionMusic((int)d);
+                        ProgressTick();
+                    }
+                }
+            }
+        }
+
+        private void ProgressSlider_PointerReleased(object? sender, Avalonia.Input.PointerReleasedEventArgs e)
+        {
+            progressSliderIsBeingDragged = false;
+            progressTimer.Start();
+        }
+
+        private void ProgressSlider_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            progressSliderIsBeingDragged = true;
+            progressTimer.Stop();
+        }
+
+        private void VolumeSlider_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property == RangeBase.ValueProperty)
+            {
+                if (e.NewValue is double d)
+                {
+                    Player.CurrentVolume = (float)d;
+                    if (Player.Playing) Player.UpdateSettings();
+                }
+            }
+        }
 
         private void Import_PlaySongButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
