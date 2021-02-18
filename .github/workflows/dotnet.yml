@@ -44,4 +44,4 @@ jobs:
         upload_url: ${{steps.create_release.outputs.upload_url}}
         asset_path: /home/runner/work/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/FRESHMusicPlayer-Avalonia/bin/Release/net5.0
         asset_name: fmp-avalonia
-        asset_content_type: ${{steps.image.outputs.asset-content-type}}
+        asset_content_type: application/zip
