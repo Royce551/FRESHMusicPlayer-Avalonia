@@ -29,6 +29,7 @@ namespace FRESHMusicPlayer_Avalonia
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+            Program.logInstance.Info("Avalonia Xaml loaded");
         }
 
         public async void LoadLibrary()
@@ -41,6 +42,7 @@ namespace FRESHMusicPlayer_Avalonia
                 foreach (var track in tracks)
                 {
                     trackEntries.Add($"{track.Artist} - {track.Title}");
+                    Program.logInstance.Info($"{track.Artist} - {track.Title} added to library");
                 }
                 
             });
@@ -49,7 +51,7 @@ namespace FRESHMusicPlayer_Avalonia
 
         private void Player_SongException(object? sender, FRESHMusicPlayer.Handlers.PlaybackExceptionEventArgs e)
         {
-            // ignored for now
+            Program.logInstance.Error(e.Details);
         }
 
         private void Player_SongStopped(object? sender, System.EventArgs e)
